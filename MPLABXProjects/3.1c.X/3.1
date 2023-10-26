@@ -1,0 +1,55 @@
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+
+char r = 0 ;//refresh
+void init(){
+    TCNT1 = 3306 ; //for  4 sec 
+}
+ISR (INT1_vect){
+    if(r == 0){
+    PORTB =0x01 ;//first interupt or light already on
+    r = 1; //;light on 
+    }else{
+        
+        PORTB = 0xFF ; 
+        _delay_ms(500);//refresh
+        PORTB = 0x01 ;
+        
+    }
+    init();//set timer
+
+    
+}
+ISR(TIMER1_OVF_vect)
+{
+    PORTB = 0x00 ;
+    r = 0 ;//light off
+    
+    
+}
+int main(){
+    EICRA = (1<< ISC11)|  (1<< ISC10) ;
+    EIMSK=(1<<INT1);
+    TIMSK1 = (1<<TOIE1);
+    TCCR1B = (1<<CS12)|(0<<CS11)|(1<<CS10) ; // initlization presacle 1024
+    
+    sei();//enable iteruptr 1
+    
+    DDRB=0xFF ;//output PORTB 
+    DDRC= 0; //Portc input
+   
+    
+    while(1){
+        if( (PINC &0x20) == 0x00){ // ig pc5 on 
+            PORTB = 0x01 ; 
+            r =1 ;//lights are  on 
+            init();
+            
+        }
+     
+    }
+    
+
+}

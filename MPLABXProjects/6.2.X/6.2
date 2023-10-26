@@ -1,0 +1,347 @@
+#define F_CPU 16000000UL
+#include<avr/io.h>
+#include<avr/interrupt.h>
+#include<util/delay.h>
+#include <stdio.h>
+#define PCA9555_0_ADDRESS 0x40 //A0=A1=A2=0 by hardware
+#define TWI_READ 1 // reading from twi device
+#define TWI_WRITE 0 // writing to twi device
+#define SCL_CLOCK 100000L // twi clock in Hz
+//Fscl=Fcpu/(16+2*TWBR0_VALUE*PRESCALER_VALUE)
+#define TWBR0_VALUE ((F_CPU/SCL_CLOCK)-16)/2
+// PCA9555 REGISTERS
+typedef enum {
+ REG_INPUT_0 = 0,
+ REG_INPUT_1 = 1,
+ REG_OUTPUT_0 = 2,
+ REG_OUTPUT_1 = 3,
+ REG_POLARITY_INV_0 = 4,
+ REG_POLARITY_INV_1 = 5,
+ REG_CONFIGURATION_0 = 6,
+ REG_CONFIGURATION_1 = 7
+} PCA9555_REGISTERS;
+//----------- Master Transmitter/Receiver -------------------
+#define TW_START 0x08
+#define TW_REP_START 0x10
+//---------------- Master Transmitter ----------------------
+#define TW_MT_SLA_ACK 0x18
+#define TW_MT_SLA_NACK 0x20
+#define TW_MT_DATA_ACK 0x28
+//---------------- Master Receiver ----------------
+#define TW_MR_SLA_ACK 0x40
+#define TW_MR_SLA_NACK 0x48
+#define TW_MR_DATA_NACK 0x58
+#define TW_STATUS_MASK 0b11111000
+#define TW_STATUS (TWSR0 & TW_STATUS_MASK)
+//initialize TWI clock
+#define lcd_clear 0x01
+#define lcd_on_hide_cursor 0x0C
+void twi_init(void)
+{
+ TWSR0 = 0; // PRESCALER_VALUE=1
+ TWBR0 = TWBR0_VALUE; // SCL_CLOCK 100KHz
+}
+// Read one byte from the twi device (request more data from device)
+unsigned char twi_readAck(void)
+{
+TWCR0 = (1<<TWINT) | (1<<TWEN) | (1<<TWEA);
+while(!(TWCR0 & (1<<TWINT)));
+ return TWDR0;
+}
+//Read one byte from the twi device, read is followed by a stop condition
+unsigned char twi_readNak(void)
+{
+TWCR0 = (1<<TWINT) | (1<<TWEN);
+while(!(TWCR0 & (1<<TWINT)));
+ return TWDR0;
+}
+// Issues a start condition and sends address and transfer direction.
+// return 0 = device accessible, 1= failed to access device
+unsigned char twi_start(unsigned char address)
+{
+ uint8_t twi_status;
+// send START condition
+TWCR0 = (1<<TWINT) | (1<<TWSTA) | (1<<TWEN);
+// wait until transmission completed
+while(!(TWCR0 & (1<<TWINT)));
+// check value of TWI Status Register.
+twi_status = TW_STATUS & 0xF8;
+if ( (twi_status != TW_START) && (twi_status != TW_REP_START)) return 1;
+// send device address
+TWDR0 = address;
+TWCR0 = (1<<TWINT) | (1<<TWEN);
+// wail until transmission completed and ACK/NACK has been received
+while(!(TWCR0 & (1<<TWINT)));
+// check value of TWI Status Register.
+twi_status = TW_STATUS & 0xF8;
+if ( (twi_status != TW_MT_SLA_ACK) && (twi_status != TW_MR_SLA_ACK) )
+ {
+ return 1;
+ }
+
+return 0;
+}
+// Send start condition, address, transfer direction.
+// Use ack polling to wait until device is ready
+void twi_start_wait(unsigned char address)
+{
+ uint8_t twi_status;
+ while ( 1 )
+ {
+// send START condition
+TWCR0 = (1<<TWINT) | (1<<TWSTA) | (1<<TWEN);
+
+ // wait until transmission completed
+ while(!(TWCR0 & (1<<TWINT)));
+
+ // check value of TWI Status Register.
+ twi_status = TW_STATUS & 0xF8;
+ if ( (twi_status != TW_START) && (twi_status != TW_REP_START)) continue;
+
+ // send device address
+ TWDR0 = address;
+ TWCR0 = (1<<TWINT) | (1<<TWEN);
+
+ // wail until transmission completed
+ while(!(TWCR0 & (1<<TWINT)));
+
+ // check value of TWI Status Register.
+ twi_status = TW_STATUS & 0xF8;
+ if ( (twi_status == TW_MT_SLA_NACK )||(twi_status ==TW_MR_DATA_NACK) )
+ {
+ /* device busy, send stop condition to terminate write operation */
+ TWCR0 = (1<<TWINT) | (1<<TWEN) | (1<<TWSTO);
+
+ // wait until stop condition is executed and bus released
+ while(TWCR0 & (1<<TWSTO));
+
+ continue;
+ }
+break;
+ }
+}
+// Send one byte to twi device, Return 0 if write successful or 1 if write failed
+unsigned char twi_write( unsigned char data )
+{
+// send data to the previously addressed device
+TWDR0 = data;
+
+TWCR0 = (1<<TWINT) | (1<<TWEN);
+// wait until transmission completed
+while(!(TWCR0 & (1<<TWINT)));
+if( (TW_STATUS & 0xF8) != TW_MT_DATA_ACK) return 1;
+return 0;
+}
+// Send repeated start condition, address, transfer direction
+//Return: 0 device accessible
+// 1 failed to access device
+unsigned char twi_rep_start(unsigned char address)
+{
+ return twi_start( address );
+}
+// Terminates the data transfer and releases the twi bus
+void twi_stop(void)
+{
+// send stop condition
+TWCR0 = (1<<TWINT) | (1<<TWEN) | (1<<TWSTO);
+// wait until stop condition is executed and bus released
+while(TWCR0 & (1<<TWSTO));
+}
+void PCA9555_0_write(PCA9555_REGISTERS reg, uint8_t value)
+{
+ twi_start_wait(PCA9555_0_ADDRESS + TWI_WRITE);
+ twi_write(reg);
+ twi_write(value);
+ twi_stop();
+}
+uint8_t PCA9555_0_read(PCA9555_REGISTERS reg)
+{
+uint8_t ret_val;
+
+ twi_start_wait(PCA9555_0_ADDRESS + TWI_WRITE);
+ twi_write(reg);
+ twi_rep_start(PCA9555_0_ADDRESS + TWI_READ);
+ ret_val = twi_readNak();
+ twi_stop();
+
+ return ret_val;
+}
+
+uint8_t scanrow(){
+   //   PCA9555_0_write(REG_OUTPUT_1, 0x07);
+      uint8_t colums = PCA9555_0_read(REG_INPUT_1);
+      
+     // colums = colums >>4 ;
+     // colums = ~colums ;
+     // colums = colums & 0x0f ;
+     
+    if((colums & 0xf) == 0xf){
+        return 16;
+    }
+    if((colums & 0x1) == 0x0){
+        return 0 ;
+    }
+    if((colums & 0x2) == 0x0){
+        return 1 ;
+    }
+      if((colums & 0x4) == 0x0){
+        return 2 ;
+    }
+    return 3;
+
+}
+uint8_t scankey(){
+    uint8_t key ;
+    //  PCA9555_0_write(REG_CONFIGURATION_1, 0b00001000);
+      
+     PCA9555_0_write(REG_OUTPUT_1,7);
+          //PCA9555_0_write(REG_INPUT_1, 0x0);
+    _delay_ms(20);
+    //scan key
+    key = scanrow();
+    
+    if(key == 16){
+    PCA9555_0_write(REG_OUTPUT_1, 0xb);
+    _delay_ms(20);
+    key = scanrow() + 4 ;
+    
+    }
+    if(key >= 16){
+    PCA9555_0_write(REG_OUTPUT_1, 0xd);
+    _delay_ms(20);
+    key = scanrow() + 8 ;
+  
+    }
+    if(key >= 16){
+    PCA9555_0_write(REG_OUTPUT_1, 0xe);
+    _delay_ms(20);
+      key = scanrow() + 12 ;
+    }
+    if(key>16){
+        key = 16;
+    }
+    return key ;
+    
+    
+}
+uint8_t scan_keypad_rising_edge(){//seira protereottitas 1 -> d
+    uint8_t ret = scankey() ;
+    while(scankey() == ret);
+    return ret ;
+}
+char  table[] = {'1','2','3','A','4','5','6','B','7','8','9','C','*','0','#','D'};
+char to_asci(uint8_t index){
+    if(index == 16 ){
+        return 0;
+    }
+    return  table[index] ;
+
+}
+void correct(){
+    PORTB = 0xFF ;
+    _delay_ms(4000);
+    PORTB = 0x0 ;
+}
+void invalid(){
+    for(int i =0 ;i<5 ;i++){
+        PORTB = 0xFF ;
+       _delay_ms(500);
+       PORTB = 0x0 ;
+       _delay_ms(500);
+       
+    }
+
+}
+void init(){
+    DDRB = 0xFF; //port b output
+}
+
+//lcd kwdikas
+void write1_nibble(char c ){
+    char  port = PIND ;
+    port = port & 0x0f ; 
+    port +=c ;
+    PORTD = port ; 
+     PORTD |=(1<<PD3);
+    PORTD &=(0<<PD3);
+    //t_do
+  
+    
+}
+void set_unset_pd3(){
+     PORTD |=(1<<PD3);
+    PORTD &=(0<<PD3);
+   // set_unset_pd3();
+}
+void write2_nibbles(char c){
+    char msb = c &0xF0 ;
+    char lsb = c &0x0F ;
+    write1_nibble(msb);
+    write1_nibble(lsb);
+    
+}
+void lcd_data(char c){
+    PORTD |= (1<<PD2);
+    write2_nibbles(c);
+    _delay_us(43);
+    
+}
+void lcd_command(char c){
+    PORTD &= (0<<PD2);
+    write2_nibbles(c);
+        _delay_us(43);
+    
+        
+}
+void to_4bit(){
+    _delay_ms(40);
+    PORTD = 0x30 ;
+    set_unset_pd3();
+    _delay_us(39);
+     set_unset_pd3();
+    _delay_us(39);
+     set_unset_pd3();
+    _delay_us(39);
+     PORTD = 0x20 ;
+     set_unset_pd3();
+    _delay_us(39);
+}
+void lcd_init(){
+    to_4bit();
+    lcd_command(0x28);//5x8 dot 2 lines
+    lcd_command(lcd_on_hide_cursor);
+    lcd_command(lcd_clear);
+    _delay_us(1530);
+    lcd_command(0x06);
+}
+char get_one(){
+    char ret ;
+    ret = to_asci(scan_keypad_rising_edge());
+    while(ret == 0){
+        ret = to_asci(scan_keypad_rising_edge());
+    }
+    return ret;
+}
+int main(){
+    twi_init();
+    init();
+  //  char myNumber[] = {'4','5'};
+     //  lcd_init();
+      // lcd_data('a');
+    PCA9555_0_write(REG_CONFIGURATION_1, 0x0f); //Set ext_port 1  i4 -i7 input  other outputs
+    while(1){
+        char first = get_one();
+       //  lcd_command(lcd_clear);
+        //lcd_data(first);
+        char second = get_one();
+        if(first == '4' && second =='5'){
+            correct();
+        }
+        else{
+            invalid();
+        }
+    
+    }
+    
+}
+

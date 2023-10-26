@@ -1,0 +1,30 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega328PB"</DEVICE>
+ <WORKING_DIR>C:\Users\user\MPLABXProjects\1.2.X</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/ATmega_DFP/2.4.131/avrasm/inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\AVR Tools\AvrAssembler2\Appnotes</DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>1.2.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/ATmega_DFP/2.4.131/avrasm/inc\m328PBdef.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>dist/default/debug/1.2.X.debug.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>1.2.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>dist/default/debug/1.2.X.debug.map</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <reset><FILE>1.2.asm</FILE><LINE>8</LINE></reset>
+  <start><FILE>1.2.asm</FILE><LINE>19</LINE></start>
+  <F0><FILE>1.2.asm</FILE><LINE>35</LINE></F0>
+  <F1><FILE>1.2.asm</FILE><LINE>47</LINE></F1>
+  <Change><FILE>1.2.asm</FILE><LINE>57</LINE></Change>
+  <END><FILE>1.2.asm</FILE><LINE>68</LINE></END>
+ </LABELS>
+</ASSEMBLER_INFO>

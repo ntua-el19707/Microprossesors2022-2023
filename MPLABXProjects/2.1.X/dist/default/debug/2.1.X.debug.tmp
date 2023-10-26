@@ -1,0 +1,44 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega328PB"</DEVICE>
+ <WORKING_DIR>C:\Users\user\MPLABXProjects\2.1.X</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/ATmega_DFP/2.4.131/avrasm/inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\AVR Tools\AvrAssembler2\Appnotes</DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>2.1.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/ATmega_DFP/2.4.131/avrasm/inc\m328PBdef.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>dist/default/debug/2.1.X.debug.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>2.1.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>dist/default/debug/2.1.X.debug.map</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <reset><FILE>2.1.asm</FILE><LINE>15</LINE></reset>
+  <ISR1><FILE>2.1.asm</FILE><LINE>55</LINE></ISR1>
+  <start><FILE>2.1.asm</FILE><LINE>41</LINE></start>
+  <wait_x_sec><FILE>2.1.asm</FILE><LINE>98</LINE></wait_x_sec>
+  <next><FILE>2.1.asm</FILE><LINE>50</LINE></next>
+  <pause><FILE>2.1.asm</FILE><LINE>87</LINE></pause>
+  <begin><FILE>2.1.asm</FILE><LINE>61</LINE></begin>
+  <notini><FILE>2.1.asm</FILE><LINE>77</LINE></notini>
+  <looppause><FILE>2.1.asm</FILE><LINE>89</LINE></looppause>
+  <loop_x><FILE>2.1.asm</FILE><LINE>101</LINE></loop_x>
+  <wait><FILE>2.1.asm</FILE><LINE>140</LINE></wait>
+  <continue><FILE>2.1.asm</FILE><LINE>122</LINE></continue>
+  <cor><FILE>2.1.asm</FILE><LINE>131</LINE></cor>
+  <wait4u><FILE>2.1.asm</FILE><LINE>136</LINE></wait4u>
+  <eat3><FILE>2.1.asm</FILE><LINE>118</LINE></eat3>
+  <consume><FILE>2.1.asm</FILE><LINE>126</LINE></consume>
+  <consume2><FILE>2.1.asm</FILE><LINE>128</LINE></consume2>
+  <loop><FILE>2.1.asm</FILE><LINE>143</LINE></loop>
+  <cwait1><FILE>2.1.asm</FILE><LINE>155</LINE></cwait1>
+  <cwait2><FILE>2.1.asm</FILE><LINE>157</LINE></cwait2>
+ </LABELS>
+</ASSEMBLER_INFO>

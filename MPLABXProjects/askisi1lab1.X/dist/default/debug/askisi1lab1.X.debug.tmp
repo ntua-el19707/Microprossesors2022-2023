@@ -1,0 +1,32 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega328PB"</DEVICE>
+ <WORKING_DIR>C:\Users\user\MPLABXProjects\askisi1lab1.X</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/ATmega_DFP/2.4.131/avrasm/inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\AVR Tools\AvrAssembler2\Appnotes</DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>newAsmTemplate.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/ATmega_DFP/2.4.131/avrasm/inc\m328PBdef.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>dist/default/debug/askisi1lab1.X.debug.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>newAsmTemplate.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>dist/default/debug/askisi1lab1.X.debug.map</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <reset><FILE>newAsmTemplate.asm</FILE><LINE>4</LINE></reset>
+  <start><FILE>newAsmTemplate.asm</FILE><LINE>11</LINE></start>
+  <wait1m><FILE>newAsmTemplate.asm</FILE><LINE>35</LINE></wait1m>
+  <wait_x_msec><FILE>newAsmTemplate.asm</FILE><LINE>17</LINE></wait_x_msec>
+  <loop><FILE>newAsmTemplate.asm</FILE><LINE>19</LINE></loop>
+  <continue><FILE>newAsmTemplate.asm</FILE><LINE>29</LINE></continue>
+  <wait4><FILE>newAsmTemplate.asm</FILE><LINE>33</LINE></wait4>
+  <loop2><FILE>newAsmTemplate.asm</FILE><LINE>37</LINE></loop2>
+ </LABELS>
+</ASSEMBLER_INFO>

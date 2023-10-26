@@ -1,0 +1,64 @@
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+ /*for duty cycle =50%
+bottom = Top/2
+Tops f =125Hz prescale 1024 fclc 16Mhz => 1+TOP = (16Mhz)/(1024 * 125) => top =124
+f = 250 => top 61 bottom 31
+ f = 500 top 30 , bottom 15
+f =1000 top 15 bottom 8 */
+    
+void init (){
+    TCCR1A = (0<<WGM10)|(1<<WGM11)|(1<<COM1A1);
+    TCCR1B = (1<<WGM12)|(1<<WGM13)|(0<<CS11)|(1<<CS12)|(1<<CS10);
+    DDRD = 0xF0;  // pd0 -pd3  input  pd4-pd7 output 
+     DDRB= 0xFF ;
+}
+int main(){
+    init();// fpw  prescale = 1024 ,fpw mode 14 ICR1 Top  OCR1A: Bottom
+    
+    sei();
+    
+   
+    OCR1AL = 0x00;
+    ICR1H=0x00;
+    ICR1L = 0x00 ; //Initial frequency 0
+    
+    while(1){
+        //pd0  press 125hz
+        if((PIND & 0x01) == 0x00){
+              OCR1AL = 0x7C; // 124
+              ICR1L = 0x3E ; //62
+              while((PIND & 0x01) == 0x00);
+        }
+        //pd1 press 250hz
+         if((PIND & 0x02) == 0x00){
+              OCR1AL = 0x3D; // 61
+              ICR1L = 0x1F ; // 31
+              while((PIND & 0x02) == 0x00);
+        }
+        //if pd2 press  500hz
+         if((PIND & 0x04) == 0x00){
+              OCR1AL = 0x1E; //32
+              ICR1L = 0x0f ; // 15
+              while((PIND & 0x04) == 0x00);
+        }
+        //if pd3 press 1000hz
+         if((PIND & 0x08) == 0x00){
+              OCR1AL = 0x0f; //15
+              ICR1L = 0x08 ;  //8
+              while((PIND & 0x08) == 0x00);
+        }
+        if((PIND & 0x0f) == 0xff){
+             OCR1AL = 0x00;
+             ICR1H=0x00;
+             ICR1L = 0x00 ;
+             //while((PIND & 0x0f) == 0xff);
+        }
+        
+        
+    }
+    
+
+}

@@ -1,0 +1,46 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega328PB"</DEVICE>
+ <WORKING_DIR>C:\Users\user\MPLABXProjects\3.1assemply.X</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/ATmega_DFP/2.4.131/avrasm/inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\AVR Tools\AvrAssembler2\Appnotes</DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>3.1.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/ATmega_DFP/2.4.131/avrasm/inc\m328PBdef.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>dist/default/production/3.1assemply.X.production.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>dist/default/production/3.1assemply.X.production.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>dist/default/production/3.1assemply.X.production.map</FILE>
+  <FILE>dist/default/production/3.1assemply.X.production.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <reset><FILE>3.1.asm</FILE><LINE>17</LINE></reset>
+  <ISR1><FILE>3.1.asm</FILE><LINE>46</LINE></ISR1>
+  <ISR_TIMER1_OVF><FILE>3.1.asm</FILE><LINE>84</LINE></ISR_TIMER1_OVF>
+  <start><FILE>3.1.asm</FILE><LINE>42</LINE></start>
+  <checkpress><FILE>3.1.asm</FILE><LINE>108</LINE></checkpress>
+  <begin><FILE>3.1.asm</FILE><LINE>54</LINE></begin>
+  <wait_x_sec><FILE>3.1.asm</FILE><LINE>125</LINE></wait_x_sec>
+  <exitISR1><FILE>3.1.asm</FILE><LINE>73</LINE></exitISR1>
+  <Timer><FILE>3.1.asm</FILE><LINE>94</LINE></Timer>
+  <press><FILE>3.1.asm</FILE><LINE>116</LINE></press>
+  <loop_x><FILE>3.1.asm</FILE><LINE>128</LINE></loop_x>
+  <wait><FILE>3.1.asm</FILE><LINE>167</LINE></wait>
+  <continue><FILE>3.1.asm</FILE><LINE>149</LINE></continue>
+  <cor><FILE>3.1.asm</FILE><LINE>158</LINE></cor>
+  <wait4u><FILE>3.1.asm</FILE><LINE>163</LINE></wait4u>
+  <eat3><FILE>3.1.asm</FILE><LINE>145</LINE></eat3>
+  <consume><FILE>3.1.asm</FILE><LINE>153</LINE></consume>
+  <consume2><FILE>3.1.asm</FILE><LINE>155</LINE></consume2>
+  <loop><FILE>3.1.asm</FILE><LINE>170</LINE></loop>
+  <cwait1><FILE>3.1.asm</FILE><LINE>182</LINE></cwait1>
+  <cwait2><FILE>3.1.asm</FILE><LINE>184</LINE></cwait2>
+ </LABELS>
+</ASSEMBLER_INFO>

@@ -1,0 +1,47 @@
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdio.h>
+void init (){
+    TCCR1A = (1<<WGM10)|(1<<COM1A1);
+    TCCR1B = (1<<WGM12)|(1<<CS11);//intilileze fpw 8 - bit  8 prescale
+    DDRB= 0xFF ;
+    DDRD = 0 ;
+    
+    
+    
+}
+int table[13]= { 0x05,0x1A,0x2E,0x42,0x57,0x6B,0x80,0x94,0xA8,0xBD,0xD1,0xE6,0xFA};
+//duty cycles  = 5(2%),26,46,66,87,107,128(50%),148,168,189,209,230,250(98%)
+int table_get(int  p ){
+    return table[p];
+}
+int main(){
+    init();
+    sei();//enable iteruptr 1
+   int possition = 6;
+   //int x =table[possition];
+    OCR1AL = table_get(possition); //table[possition];
+    while(1){
+        if((PIND &0x02) == 0x00){
+            while((PIND &0x02) == 0x00);//wait until button unpressed
+            //comands 
+           if(possition<12){
+               ++possition ;//if duty cycle is not at 98%
+               OCR1AL =  table_get(possition);
+                 
+           }
+           // }
+        }
+           if( (PIND &0x04) == 0x00){
+            while((PIND &0x04) == 0x00);//wait until button unpressed
+            //comands 
+             if(possition > 0 ){
+               --possition ;//if duty cycle is not at 2%
+               OCR1AL =  table_get(possition);
+                 
+           }
+            
+        }
+    }
+}

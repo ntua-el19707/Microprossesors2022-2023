@@ -1,0 +1,61 @@
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+
+char r = 0 ;//refresh
+char l = 0 ;//lights
+int h = 0 ;
+int count = 0 ; 
+ISR (INT1_vect){
+
+    l =1 ;
+    if(r == 0){
+    PORTB =0x01 ;
+    r = 1;
+    }else{
+        h =1;
+        PORTB = 0xFF ; 
+        _delay_ms(500);
+        PORTB = 0x01 ;
+        
+    }
+    
+
+    
+}
+
+
+int main(){
+    EICRA = (1<< ISC11)|  (1<< ISC10) ;
+    EIMSK=(1<<INT1);
+    sei();//enable iteruptr 1
+    
+    DDRB=0xFF ;//output PORTB 
+  
+   
+    
+    while(1){
+        
+        if(l == 1){
+            while(count<4000){
+                _delay_ms(1);
+                ++count  ;
+                if(h == 1){
+                    count =0 ;
+                    h= 0; 
+                }
+            }
+            
+            l = 0 ;
+            r = 0 ;
+            count = 0 ;
+        }else{
+           PORTB =0x00 ;
+        }
+        
+       _delay_ms(500);
+    }
+    
+
+}

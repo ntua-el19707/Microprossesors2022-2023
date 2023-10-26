@@ -1,0 +1,45 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega328PB"</DEVICE>
+ <WORKING_DIR>C:\Users\user\MPLABXProjects\2.3assemply.X</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/ATmega_DFP/2.4.131/avrasm/inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\AVR Tools\AvrAssembler2\Appnotes</DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>2.3.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/ATmega_DFP/2.4.131/avrasm/inc\m328PBdef.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>dist/default/debug/2.3assemply.X.debug.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>2.3.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>dist/default/debug/2.3assemply.X.debug.map</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <reset><FILE>2.3.asm</FILE><LINE>12</LINE></reset>
+  <ISR1><FILE>2.3.asm</FILE><LINE>47</LINE></ISR1>
+  <start><FILE>2.3.asm</FILE><LINE>32</LINE></start>
+  <not_restart><FILE>2.3.asm</FILE><LINE>37</LINE></not_restart>
+  <clear_restart><FILE>2.3.asm</FILE><LINE>43</LINE></clear_restart>
+  <wait_x_sec><FILE>2.3.asm</FILE><LINE>107</LINE></wait_x_sec>
+  <begin><FILE>2.3.asm</FILE><LINE>54</LINE></begin>
+  <not_refr><FILE>2.3.asm</FILE><LINE>68</LINE></not_refr>
+  <refresh_custom><FILE>2.3.asm</FILE><LINE>91</LINE></refresh_custom>
+  <light><FILE>2.3.asm</FILE><LINE>79</LINE></light>
+  <loop_x><FILE>2.3.asm</FILE><LINE>110</LINE></loop_x>
+  <wait><FILE>2.3.asm</FILE><LINE>142</LINE></wait>
+  <continue><FILE>2.3.asm</FILE><LINE>126</LINE></continue>
+  <cor><FILE>2.3.asm</FILE><LINE>134</LINE></cor>
+  <wait4u><FILE>2.3.asm</FILE><LINE>139</LINE></wait4u>
+  <eat3><FILE>2.3.asm</FILE><LINE>122</LINE></eat3>
+  <consume><FILE>2.3.asm</FILE><LINE>129</LINE></consume>
+  <consume2><FILE>2.3.asm</FILE><LINE>131</LINE></consume2>
+  <loop><FILE>2.3.asm</FILE><LINE>145</LINE></loop>
+  <cwait1><FILE>2.3.asm</FILE><LINE>157</LINE></cwait1>
+  <cwait2><FILE>2.3.asm</FILE><LINE>159</LINE></cwait2>
+ </LABELS>
+</ASSEMBLER_INFO>
